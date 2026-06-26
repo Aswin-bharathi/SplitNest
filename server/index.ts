@@ -15,7 +15,10 @@ const SESSION_MAX_AGE_MS = Number(process.env.SESSION_MAX_AGE_MS ?? 7 * 24 * 60 
 
 async function start() {
   await connectDb(MONGODB_URI);
-  await seedDatabase();
+
+  if (process.env.NODE_ENV !== "production") {
+    await seedDatabase();
+  }
 
   const app = express();
   app.use(
