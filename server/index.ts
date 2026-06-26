@@ -1,3 +1,4 @@
+//server/index.ts
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
@@ -23,8 +24,8 @@ async function start() {
   const app = express();
   app.use(
     cors({
-      origin: true,
-      credentials: true
+      origin: 'https://splitn.netlify.app',  // ✅ exact origin
+      credentials: true                        // ✅ required for cookies
     })
   );
   app.use(express.json());
@@ -37,8 +38,8 @@ async function start() {
       cookie: {
         maxAge: SESSION_MAX_AGE_MS,
         httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production'
+        sameSite: 'none',    // ✅ allows cross-site
+        secure: true          // ✅ must be true when sameSite is 'none'
       }
     })
   );
