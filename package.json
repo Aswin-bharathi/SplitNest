@@ -15,7 +15,8 @@
     "db:reset": "tsx server/seed-cli.ts reset",
     "test:logic": "tsx src/lib/settlements.test.ts",
     "generate:icons": "node scripts/generate-pwa-icons.mjs",
-    "prebuild": "npm run generate:icons"
+    "prebuild": "npm run generate:icons",
+    "start": "npm run start:server"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.80.7",
