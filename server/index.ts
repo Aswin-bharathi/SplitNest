@@ -2,8 +2,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
+// import session from 'express-session';
+// import MongoStore from 'connect-mongo';
 import { connectDb } from './db.js';
 import { seedDatabase } from './seed.js';
 import { apiRouter } from './routes/api.js';

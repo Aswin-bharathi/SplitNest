@@ -1,10 +1,13 @@
 import { Router } from 'express';
+import jwt from 'jsonwebtoken';
 import { Member } from '../models/Member.js';
 import { verifyPassword } from '../lib/auth.js';
 import { requireAuth } from '../middleware/auth.js';
 import { normalizeUsername } from '../lib/username.js';
 
 export const authRouter = Router();
+
+const SECRET = process.env.SESSION_SECRET ?? 'splitnest-dev-secret-change-in-production';
 
 authRouter.post('/login', async (req, res) => {
   try {
@@ -31,8 +34,10 @@ authRouter.post('/login', async (req, res) => {
       return;
     }
 
-    req.session.userId = member.id;
+    const token = jwt.sign({ userId: member.id }, SECRET, { expiresIn: '7d' });
+
     res.json({
+      token,
       member: {
         id: member.id,
         name: member.name,
@@ -49,21 +54,14 @@ authRouter.post('/login', async (req, res) => {
 });
 
 authRouter.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      res.status(500).json({ error: 'Logout failed.' });
-      return;
-    }
-    res.clearCookie('connect.sid');
-    res.json({ ok: true });
-  });
+  // JWT is stateless — client just deletes the token
+  res.json({ ok: true });
 });
 
 authRouter.get('/me', requireAuth, async (req, res) => {
   try {
-    const member = await Member.findOne({ id: req.session.userId }).lean();
+    const member = await Member.findOne({ id: req.userId }).lean();
     if (!member) {
-      req.session.destroy(() => {});
       res.status(401).json({ error: 'Session expired. Please log in again.' });
       return;
     }

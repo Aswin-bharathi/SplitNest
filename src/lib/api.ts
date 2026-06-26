@@ -1,9 +1,17 @@
 const API_BASE = import.meta.env.VITE_API_URL ?? '/api';
 
+function getToken() {
+  return localStorage.getItem('splitnest_token');
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = getToken();
   const response = await fetch(`${API_BASE}${path}`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options?.headers
+    },
     ...options
   });
   if (!response.ok) {
@@ -51,12 +59,18 @@ export type ExpenseDraft = {
 
 export const api = {
   health: () => request<{ ok: boolean }>('/health'),
-  login: (username: string, password: string) =>
-    request<{ member: AuthMember }>('/auth/login', {
+  login: async (username: string, password: string) => {
+    const data = await request<{ token: string; member: AuthMember }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password })
-    }),
-  logout: () => request<{ ok: boolean }>('/auth/logout', { method: 'POST' }),
+    });
+    localStorage.setItem('splitnest_token', data.token);
+    return data;
+  },
+  logout: async () => {
+    localStorage.removeItem('splitnest_token');
+    return request<{ ok: boolean }>('/auth/logout', { method: 'POST' });
+  },
   me: () => request<{ member: AuthMember }>('/auth/me'),
   bootstrap: () => request<BootstrapData>('/bootstrap'),
   addMember: (body: { name: string; email?: string; groupId: string; password: string }) =>
