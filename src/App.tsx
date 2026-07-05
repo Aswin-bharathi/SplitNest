@@ -245,12 +245,6 @@ export default function App() {
         <div className="border-b border-[#6f6d5a] px-6 py-8">
           <h1 className="font-serif text-3xl font-bold italic text-[#f5ff8f]">SplitNest</h1>
           <p className="mt-2 text-sm text-[#d8d4b4]">Shared expense manager</p>
-          {state.apiConnected && (
-            //<p className="mt-3 flex items-center gap-2 text-xs text-[#86d28e]">
-              //<span className="size-2 rounded-full bg-[#86d28e]" />
-              //MongoDB connected
-           // </p>
-          )}
           {state.currentUser && (
             <p className="mt-3 text-sm text-[#d8d4b4]">
               Signed in as <span className="font-semibold text-[#fff9bf]">{state.currentUser.name}</span>
