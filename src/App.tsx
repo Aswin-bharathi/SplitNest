@@ -257,7 +257,6 @@ export default function App() {
           {state.apiConnected && (
             <p className="mt-3 flex items-center gap-2 text-xs text-[#86d28e]">
               <span className="size-2 rounded-full bg-[#86d28e]" />
-              MongoDB connected
             </p>
           )}
           {state.currentUser && (
