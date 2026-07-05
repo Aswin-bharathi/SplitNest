@@ -407,6 +407,9 @@ apiRouter.patch('/groups/:groupId/budget', requireAdmin, async (req, res) => {
     res.status(500).json({ error: 'Failed to update budget' });
   }
 });
+authRouter.get("/test", (req, res) => {
+  res.json({ ok: true });
+});
 
 apiRouter.patch('/notifications/:id/read', requireAuth, async (req, res) => {
   try {
