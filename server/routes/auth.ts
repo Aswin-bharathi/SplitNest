@@ -57,6 +57,9 @@ authRouter.post('/logout', (req, res) => {
   // JWT is stateless — client just deletes the token
   res.json({ ok: true });
 });
+authRouter.get("/test", (req, res) => {
+  res.json({ ok: true });
+});
 
 authRouter.get('/me', requireAuth, async (req, res) => {
   try {
